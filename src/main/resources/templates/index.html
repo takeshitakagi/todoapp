@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo App</title>
+</head>
+<body>
+    <h1>Todo App</h1>
+
+    <!-- 新しいTODOアイテムを追加するフォーム -->
+    <form action="/add" method="post">
+        <input type="text" name="task" placeholder="Add a new task" required>
+        <button type="submit">Add Todo</button>
+    </form>
+
+    <h2>Todo List</h2>
+    <ul>
+        <!-- TODOアイテムをリストとして表示 -->
+        <th:block th:each="todo : ${todos}">
+            <li>
+                <span th:text="${todo.task}"></span>
+                <form action="/delete" method="post" style="display:inline;">
+                    <input type="hidden" name="id" th:value="${todo.id}">
+                    <button type="submit">Delete</button>
+                </form>
+            </li>
+        </th:block>
+    </ul>
+</body>
+</html>
