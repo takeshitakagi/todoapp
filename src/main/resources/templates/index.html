@@ -38,6 +38,7 @@
                     <input type="hidden" name="id" th:value="${todo.id}">
                     <button type="submit">Delete</button>
                 </form>
+                <a th:href="@{/edit/{id}(id=${todo.id})}">Edit</a> <!-- 編集リンク -->
             </li>
         </th:block>
     </ul>
