@@ -1,10 +1,24 @@
 package com.example.todoapp;
 
+import com.fasterxml.jackson.annotation.JsonTypeId;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
+@Entity
 public class Todo {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String task;
     private boolean completed;
+
+    // デフォルトコンストラクタ
+    public Todo(){
+
+    }
 
     // コンストラクタ
     public Todo(Long id, String task, boolean completed){
