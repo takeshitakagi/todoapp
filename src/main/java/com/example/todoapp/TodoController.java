@@ -36,4 +36,15 @@ public class TodoController {
         todos.removeIf(todo -> todo.getId().equals(id));
         return "redirect:/"; // TODOリストページにリダイレクト
     }
+
+    @PostMapping("/toggle")
+    public String toggleTodo(@RequestParam("id") Long id){
+        for(Todo todo : todos){
+            if(todo.getId().equals(id)){
+                todo.setCompleted(!todo.isCompleted());
+                break;
+            }
+        }
+    return "redirect:/";
+    }
 }

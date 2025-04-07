@@ -4,6 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Todo App</title>
+
+    <style>
+        .completed{
+            text-decoration: line-through;
+            color: gray;
+        }
+    </style>
 </head>
 <body>
     <h1>Todo App</h1>
@@ -19,7 +26,14 @@
         <!-- TODOアイテムをリストとして表示 -->
         <th:block th:each="todo : ${todos}">
             <li>
-                <span th:text="${todo.task}"></span>
+                <form action="toggle" method="post" style="display:inline;">
+                    <input type="hidden" name="id" th:value="${todo.id}">
+                    <input type="checkbox" name="completed"
+                            th:chechked="${todo.completed}"
+                            onchange="this.form.submit()">
+                </form>
+                <span th:text="${todo.task}"
+                        th:classappend="${todo.completed} ? 'completed' : ''"></span>
                 <form action="/delete" method="post" style="display:inline;">
                     <input type="hidden" name="id" th:value="${todo.id}">
                     <button type="submit">Delete</button>
