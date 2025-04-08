@@ -16,9 +16,13 @@
     <h1>Todo App</h1>
 
     <!-- 新しいTODOアイテムを追加するフォーム -->
-    <form action="/add" method="post">
-        <input type="text" name="task" placeholder="Add a new task" required>
+    <form action="/add" method="post" th:object="${todo}">
+        <input type="text" th:field="*{task}" placeholder="新しいタスクを入力してください" style="width: 220px;">
+
         <button type="submit">Add Todo</button>
+
+        <!-- バリデーションエラー表示 -->
+        <div th:if="${#fields.hasErrors('task')}" th:errors="*{task}" style="color:red"></div>
     </form>
 
     <h2>Todo List</h2>
@@ -29,7 +33,7 @@
                 <form action="toggle" method="post" style="display:inline;">
                     <input type="hidden" name="id" th:value="${todo.id}">
                     <input type="checkbox" name="completed"
-                            th:chechked="${todo.completed}"
+                            th:checked="${todo.completed}"
                             onchange="this.form.submit()">
                 </form>
                 <span th:text="${todo.task}"

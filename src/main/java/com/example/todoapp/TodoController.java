@@ -1,10 +1,12 @@
 package com.example.todoapp;
 
-import org.springframework.beans.factory.annotation.Autowire;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
+
 
 @Controller
 public class TodoController {
@@ -15,16 +17,21 @@ public class TodoController {
     // ホームページを表示（TODOリスト）
     @GetMapping("/")
     public String home(Model model){
+        model.addAttribute("todo", new Todo());
         model.addAttribute("todos", todoRepository.findAll()); // ModelにTODOリストを追加
         return "index"; // index.htmlを返す
     }
 
     // TODOアイテムを追加
     @PostMapping("/add")
-    public String addTodo(@RequestParam("task") String task){
-        Todo newTodo = new Todo(null, task, false);
-        todoRepository.save(newTodo);
-        return "redirect:/"; // TODOリストページにリダイレクト
+    public String addTodo(@Valid @ModelAttribute("todo") Todo todo, BindingResult result, Model model){
+        if(result.hasErrors()){
+            model.addAttribute("todos", todoRepository.findAll()); // エラー時もリストを表示
+            return "index"; // エラー時は同じページに戻す
+        }
+
+        todoRepository.save(todo);
+        return "redirect:/";
     }
 
     // TODOアイテムを削除
@@ -58,12 +65,13 @@ public class TodoController {
 
     // 編集内容を保存
     @PostMapping("/edit")
-    public String editTodo(@RequestParam("id") Long id, @RequestParam("task") String task){
-        Todo todo = todoRepository.findById(id).orElse(null);
-        if(todo != null){
-            todo.setTask(task);
-            todoRepository.save(todo);
+    public String editTodo(@Valid Todo todo, BindingResult result, Model model){
+        if(result.hasErrors()){
+            model.addAttribute("todo", todo);
+            return "edit"; // エラーがある場合は編集フォームを再表示
         }
+
+        todoRepository.save(todo); // バリデーションを通過したら保存
         return "redirect:/"; // 編集後にリダイレクト
     }
 }
